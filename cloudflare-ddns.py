@@ -4,9 +4,12 @@ import json
 import os
 import requests
 from dotenv import load_dotenv
+import logging
 
 
 def main():
+    logging.basicConfig(level=logging.DEBUG, filename='cloudflare-ddns.log', format='[%(asctime)s] %(message)s')
+
     # 讀取設定檔
     load_dotenv()
 
@@ -44,10 +47,15 @@ def main():
 
         print(r.status_code, r.text)
 
-        # 紀錄這次的 IP
         if r.status_code == 200:
+            # 紀錄這次的 IP
             with open('last_ip', 'w') as f:
                 f.write(ip)
+
+            logging.info('Update IP: ' + ip)
+        else:
+            logging.error(r.status_code)
+            logging.error(r.text)
     else:
         print('IP no change, skip update.')
 
