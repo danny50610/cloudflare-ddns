@@ -8,7 +8,7 @@ import logging
 
 
 def main():
-    logging.basicConfig(level=logging.DEBUG, filename='cloudflare-ddns.log', format='[%(asctime)s] %(message)s')
+    logger = get_logger()
 
     # 讀取設定檔
     load_dotenv()
@@ -52,12 +52,29 @@ def main():
             with open('last_ip', 'w') as f:
                 f.write(ip)
 
-            logging.info('Update IP: ' + ip)
+            logger.info('Update IP: ' + ip)
         else:
-            logging.error(r.status_code)
-            logging.error(r.text)
+            logger.error(r.status_code)
+            logger.error(r.text)
     else:
         print('IP no change, skip update.')
+
+
+def get_logger():
+    logger = logging.getLogger('cloudflare-ddns')
+    logger.setLevel(logging.INFO)
+
+    handler = logging.FileHandler('cloudflare-ddns.log')
+    handler.setLevel(logging.INFO)
+
+    # create a logging format
+    formatter = logging.Formatter('[%(asctime)s] %(message)s')
+    handler.setFormatter(formatter)
+
+    # add the handlers to the logger
+    logger.addHandler(handler)
+
+    return logger
 
 
 if __name__ == '__main__':
