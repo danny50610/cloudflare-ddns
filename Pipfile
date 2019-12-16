@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 python-dotenv = "==0.10.3"
 requests = "*"
+pyyaml = "*"
 
 [requires]
 python_version = "3.7"
