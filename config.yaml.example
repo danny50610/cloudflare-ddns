@@ -1,0 +1,10 @@
+get_ip_url:
+target_domains:
+  - domain:
+    zone_id:
+    record_id:
+    api_token:
+  - domain:
+    zone_id:
+    record_id:
+    api_token:
