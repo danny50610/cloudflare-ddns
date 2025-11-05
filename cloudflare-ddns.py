@@ -2,14 +2,14 @@
 # -*- coding: UTF-8 -*-
 import json
 import os
+from typing import Union
 import requests
 import yaml
 import logging
 
+logger: Union[logging.Logger, None] = None
 
 def main():
-    logger = get_logger()
-
     # 讀取設定檔
     with open('config.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
@@ -66,7 +66,9 @@ def main():
         print('IP no change, skip update.')
 
 
-def get_logger():
+def init_logger():
+    global logger
+
     logger = logging.getLogger('cloudflare-ddns')
     logger.setLevel(logging.INFO)
 
@@ -80,8 +82,12 @@ def get_logger():
     # add the handlers to the logger
     logger.addHandler(handler)
 
-    return logger
-
 
 if __name__ == '__main__':
-    main()
+    init_logger()
+
+    try:
+        main()
+    except Exception as e:
+        logger.exception(e)
+        raise e
